@@ -40,10 +40,8 @@ public class StudentEnrolment {
         }
         else {
             coursesList.add(course);
-            System.out.println("Successfully enroll into [" + course.getCourseID() + "].");
+            System.out.println("Successfully enroll into [" + course.getCourseID() + "] for semester [" + semester + "].");
             return true;
         }
     }
-
-
 }
