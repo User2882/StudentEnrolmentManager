@@ -10,15 +10,40 @@ public class StudentEnrolment {
         coursesList = new ArrayList<Course>();
         semester = "Default";
     }
-    public StudentEnrolment(Student student, Course course, String semester) {
-        if (coursesList.contains(course)) {
-            System.out.println("StudentID [" + student.getStudentID() + "] has already enrolled in course [" + course.getCourseID() + "].");
+    public StudentEnrolment(Student student, String semester) {
+        this.student = student;
+        this.coursesList = new ArrayList<Course>();
+        this.semester = semester;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+    public ArrayList<Course> getCoursesList() {
+        return coursesList;
+    }
+    public String getSemester() {
+        return semester;
+    }
+
+    public boolean enroll(Course course) {
+        if (this.coursesList.contains(course)) {
+            System.out.println("Student with ID [" + this.student.getStudentID() + "] has already enrolled course [" + course.getCourseID() + "] in semester [" + this.semester + "].");
+            return false;
         }
         else {
-            this.student = student;
-            this.coursesList.add(course);
-            this.semester = semester;
+            coursesList.add(course);
+            System.out.println("Successfully enroll into [" + course.getCourseID() + "].");
+            return true;
         }
     }
-    
+
+
 }
