@@ -38,4 +38,9 @@ public class Course {
     public int getCourseCredit() {
         return credit;
     }
+
+    @Override
+    public String toString() {
+        return "[" + courseID + "]|[" + courseName + "]|[" + credit + "].";
+    }
 }
