@@ -14,11 +14,15 @@ public class StudentEnrolmentManager {
         StudentEnrolment enroll1 = new StudentEnrolment(s1, "2020A");
         StudentEnrolment enroll2 = new StudentEnrolment(s2, "2020B");
 
-        enroll1.enroll(c1);
-        enroll1.enroll(c2);
-        enroll2.enroll(c1);
+        enroll1.enrollCourse(c1);
+        enroll1.enrollCourse(c2);
+        enroll2.enrollCourse(c1);
 
         System.out.println(enroll2.getCoursesList().get(0).getCourseID());
+
+        enroll1.dropCourse(c1);
+
+        System.out.println(enroll1.getCoursesList().get(0).getCourseID());
         System.out.println("Done!");
     }
 }

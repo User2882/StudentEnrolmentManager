@@ -33,7 +33,7 @@ public class StudentEnrolment {
         return semester;
     }
 
-    public boolean enroll(Course course) {
+    public boolean enrollCourse(Course course) {
         if (this.coursesList.contains(course)) {
             System.out.println("Student with ID [" + this.student.getStudentID() + "] has already enrolled course [" + course.getCourseID() + "] in semester [" + this.semester + "].");
             return false;
@@ -42,6 +42,23 @@ public class StudentEnrolment {
             coursesList.add(course);
             System.out.println("Successfully enroll into [" + course.getCourseID() + "] for semester [" + semester + "].");
             return true;
+        }
+    }
+    public boolean dropCourse(Course course) {
+        if (coursesList.contains(course)) {
+            coursesList.remove(course);
+            System.out.println("Course [" + course.getCourseID() + "] has been dropped.");
+            return true;
+        }
+        return false;
+    }
+    public void dropAllCourse() {
+        if (coursesList.isEmpty()) {
+            System.out.println("No course left to drop in semester [" + semester + "].");
+        }
+        else {
+            coursesList.clear();
+            System.out.println("All course has been drop for semester [" + semester + "].");
         }
     }
 }
