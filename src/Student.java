@@ -33,4 +33,9 @@ public class Student {
     public Dates getDayOfBirth() {
         return dayOfBirth;
     }
+
+    @Override
+    public String toString() {
+        return "[" + studentID + "]|[" + studentName + "]|[" + dayOfBirth.toString() + "]";
+    }
 }

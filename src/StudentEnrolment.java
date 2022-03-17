@@ -35,12 +35,12 @@ public class StudentEnrolment {
 
     public boolean enrollCourse(Course course) {
         if (this.coursesList.contains(course)) {
-            System.out.println("Student with ID [" + this.student.getStudentID() + "] has already enrolled course [" + course.getCourseID() + "] in semester [" + this.semester + "].");
+//            System.out.println("Student with ID [" + this.student.getStudentID() + "] has already enrolled course [" + course.getCourseID() + "] in semester [" + this.semester + "].");
             return false;
         }
         else {
             coursesList.add(course);
-            System.out.println("Successfully enroll into [" + course.getCourseID() + "] for semester [" + semester + "].");
+            //System.out.println("Successfully enroll into [" + course.getCourseID() + "] for semester [" + semester + "].");
             return true;
         }
     }
@@ -61,4 +61,5 @@ public class StudentEnrolment {
             System.out.println("All course has been drop for semester [" + semester + "].");
         }
     }
+
 }
