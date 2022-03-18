@@ -75,18 +75,13 @@ public class Dates {
             this.month = month;
             this.year = year;
         }
-        else {
-            day = 01;
-            month = 01;
-            year = MIN_YEAR;
-        }
     }
 
-    public  boolean setDate(Dates newDate){
-        if (isValidDate(newDate.day, newDate.month, newDate.year)) {
-            this.day = newDate.day;
-            this.month = newDate.month;
-            this.year = newDate.year;
+    public  boolean setDate(int month, int day, int year){
+        if (isValidDate(day, month, year)) {
+            this.day = day;
+            this.month = month;
+            this.year = year;
             return true;
         }
         return false;

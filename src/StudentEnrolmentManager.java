@@ -1,11 +1,15 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class StudentEnrolmentManager {
-    public static void main(String[] args) {
+
+
+
+    public static void main(String[] args) throws IOException {
         String read_line = "";
         String separator = ",";
         ArrayList<StudentEnrolment> studentProfileList = new ArrayList<StudentEnrolment>();
@@ -53,7 +57,67 @@ public class StudentEnrolmentManager {
         catch (IOException errorIO) {
             errorIO.printStackTrace();
         }
+
         System.out.println("File read and info stored!");
         //user interface start here
+        String string_input = "";
+
+        System.out.println("Welcome to the Student Enrolment Manager software (S.E.M)");
+        System.out.println("Navigate by enter the [number] correspond to the option:");
+
+        while (!Objects.equals(string_input, "0")) {
+            System.out.print("[1]: Add a new enrolment profile.\n[2]: Update existing enrolment profile.\n[3]: Delete an existing enrolment profile.\n[0]: Exit.\nInput: ");
+            BufferedReader read_from_console = new BufferedReader(new InputStreamReader(System.in));
+            string_input = read_from_console.readLine();
+
+            switch (string_input) {
+                case "0":   //exit block
+                    //need to save file
+                    System.out.println("File saved!");
+                    break;
+                case "1":   //add new profile block
+                    System.out.print("Student information:\n -Student ID: ");
+                    String studentID = read_from_console.readLine();
+
+                    System.out.print(" -Student Name: ");
+                    String studentName = read_from_console.readLine();
+
+                    System.out.print(" -Student DOB (mm/dd/yy): ");
+                    String studentDOB[] = read_from_console.readLine().split("/");
+                    int month = 0, day = 0, year = 0;
+                    //check for error when Integer.parseInt(String input) input contain char
+                    try {
+                        month = Integer.parseInt(studentDOB[0]);
+                        day = Integer.parseInt(studentDOB[1]);
+                        year = Integer.parseInt(studentDOB[2]);
+                    } catch (NumberFormatException e) {
+                        //e.printStackTrace();
+                        System.out.println("Character(s) input detected!");
+                        break;
+                    }
+
+                    Dates day_of_birth = new Dates();
+                    if (!day_of_birth.setDate(month, day, year)) {
+                        System.out.println("New student info invalid!");
+                        break;
+                    }
+                    Student student = new Student(studentID, studentName, day_of_birth);
+                    System.out.println("New student info valid!");
+//                    System.out.println(" -Semester of enrolment: ");
+
+                    System.out.println(student.getStudentID());
+                    break;
+                case "2":
+                    System.out.println("2");
+                    break;
+                case "3":
+                    System.out.println("3");
+                    break;
+                default:
+                    System.out.println("Invalid input: [" + string_input + "] is not a valid listed input option.");
+                    break;
+            }
+        }
+
     }
 }

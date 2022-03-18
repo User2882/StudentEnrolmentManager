@@ -4,18 +4,18 @@ public class Student {
     private Dates dayOfBirth;
 
     public Student() {
-        studentID = "s000";
+        studentID = "S000";
         studentName = "Default";
         dayOfBirth = null;
     }
     public Student(String studentID, String studentName, Dates dayOfBirth) {
-        this.studentID = studentID;
+        this.studentID = studentID.toUpperCase();
         this.studentName = studentName;
         this.dayOfBirth = dayOfBirth;
     }
 
     public void setStudentID(String studentID) {
-        this.studentID = studentID;
+        this.studentID = studentID.toUpperCase();
     }
     public void setStudentName(String studentName) {
         this.studentName = studentName;
