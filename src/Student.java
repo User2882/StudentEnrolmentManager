@@ -14,8 +14,23 @@ public class Student {
         this.dayOfBirth = dayOfBirth;
     }
 
-    public void setStudentID(String studentID) {
-        this.studentID = studentID.toUpperCase();
+    public boolean setStudentID(String studentID) {
+        int number;
+        boolean valid = true;
+        String temp = studentID.substring(1);
+
+        try {
+            number = Integer.parseInt(temp);
+        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+            valid = false;
+        }
+
+        if (studentID.toUpperCase().startsWith("S") && studentID.length() == 7 && valid) {
+            this.studentID = studentID.toUpperCase();
+            return true;
+        }
+        return false;
     }
     public void setStudentName(String studentName) {
         this.studentName = studentName;

@@ -76,11 +76,19 @@ public class StudentEnrolmentManager {
                     System.out.println("File saved!");
                     break;
                 case "1":   //add new profile block
+                    Student student = new Student();
+
                     System.out.print("Student information:\n -Student ID: ");
                     String studentID = read_from_console.readLine();
+                    if (!student.setStudentID(studentID)) {
+                        System.out.println("[" + studentID + "] is not a valid ID!");
+                        student = null;
+                        break;
+                    }
 
                     System.out.print(" -Student Name: ");
                     String studentName = read_from_console.readLine();
+                    student.setStudentName(studentName);
 
                     System.out.print(" -Student DOB (mm/dd/yy): ");
                     String studentDOB[] = read_from_console.readLine().split("/");
@@ -91,21 +99,33 @@ public class StudentEnrolmentManager {
                         day = Integer.parseInt(studentDOB[1]);
                         year = Integer.parseInt(studentDOB[2]);
                     } catch (NumberFormatException e) {
+                        //uncomment to print out error message
                         //e.printStackTrace();
                         System.out.println("Character(s) input detected!");
+                        //clear the invalid obj
+                        student = null;
                         break;
                     }
-
                     Dates day_of_birth = new Dates();
                     if (!day_of_birth.setDate(month, day, year)) {
                         System.out.println("New student info invalid!");
+                        student = null;
                         break;
                     }
-                    Student student = new Student(studentID, studentName, day_of_birth);
-                    System.out.println("New student info valid!");
-//                    System.out.println(" -Semester of enrolment: ");
+                    student.setDate(day_of_birth);
 
-                    System.out.println(student.getStudentID());
+                    System.out.println(" -Semester of enrolment: ");
+                    String semester = read_from_console.readLine();
+                    if (Integer.parseInt(semester.substring(0,3)) >= 1800 && Integer.parseInt(semester.substring(0,3)) <= 9999 &&
+                            (semester.toUpperCase().endsWith("A") || semester.toUpperCase().endsWith("B") || semester.toUpperCase().endsWith("C"))) {
+                        studentProfileList.add(new StudentEnrolment(student, semester));
+                        System.out.println("Successfully enroll [" + studentID + "] into semester [" + semester + "]");
+                        break;
+                    }
+                    else {
+                        //clear obj
+                        student = null;
+                    }
                     break;
                 case "2":
                     System.out.println("2");
