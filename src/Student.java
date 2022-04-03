@@ -1,3 +1,5 @@
+import java.nio.file.FileAlreadyExistsException;
+
 public class Student {
     private String studentID;
     private String studentName;
@@ -6,13 +8,13 @@ public class Student {
     public Student() {
         studentID = "S000";
         studentName = "Default";
-        dayOfBirth = null;
+        dayOfBirth = new Dates();
     }
-    public Student(String studentID, String studentName, Dates dayOfBirth) {
+    /*public Student(String studentID, String studentName, Dates dayOfBirth) {
         this.studentID = studentID.toUpperCase();
         this.studentName = studentName;
         this.dayOfBirth = dayOfBirth;
-    }
+    }*/
 
     public boolean setStudentID(String studentID) {
         int number;
@@ -32,11 +34,13 @@ public class Student {
         }
         return false;
     }
-    public void setStudentName(String studentName) {
+    public boolean setStudentName(String studentName) {
         this.studentName = studentName;
+        return true;
     }
-    public void setDate(Dates dayOfBirth) {
-        this.dayOfBirth = dayOfBirth;
+    public boolean setDate(Dates dayOfBirth) {
+//        this.dayOfBirth = dayOfBirth;
+        return this.dayOfBirth.setDate(dayOfBirth.getMonth(), dayOfBirth.getDay(), dayOfBirth.getYear());
     }
 
     public String getStudentID() {
@@ -50,7 +54,20 @@ public class Student {
     }
 
     @Override
-    public String toString() {
-        return "[" + studentID + "]|[" + studentName + "]|[" + dayOfBirth.toString() + "]";
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Student o1 = (Student) o;
+        return studentID.equals(o1.studentID) && studentName.equals(o1.studentName) && dayOfBirth.equals(o1.dayOfBirth);
     }
+
+    @Override
+    public String toString() {
+        return "[" + studentID + " | " + studentName + " | " + dayOfBirth.toString() + "]";
+    }
+
 }

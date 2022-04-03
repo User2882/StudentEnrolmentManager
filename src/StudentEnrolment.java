@@ -1,65 +1,56 @@
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StudentEnrolment {
     private Student student;
-    private ArrayList<Course> coursesList;
+    private Course courses;
     private String semester;
 
     public StudentEnrolment() {
         student = new Student();
-        coursesList = new ArrayList<Course>();
+        courses = new Course();
         semester = "Default";
     }
-    public StudentEnrolment(Student student, String semester) {
+    /*public StudentEnrolment(Student student, String semester) {
         this.student = student;
-        this.coursesList = new ArrayList<Course>();
-        this.semester = semester;
-    }
+        this.courses = new ArrayList<Course>();
+        this.semester = semester.toUpperCase();
+    }*/
 
     public void setStudent(Student student) {
         this.student = student;
     }
+    public void setCourses(Course courses) {
+        this.courses = courses;
+    }
     public void setSemester(String semester) {
-        this.semester = semester;
+        this.semester = semester.toUpperCase();
     }
 
     public Student getStudent() {
         return student;
     }
-    public ArrayList<Course> getCoursesList() {
-        return coursesList;
+    public Course getCourses() {
+        return courses;
     }
     public String getSemester() {
         return semester;
     }
 
-    public boolean enrollCourse(Course course) {
-        if (this.coursesList.contains(course)) {
-//            System.out.println("Student with ID [" + this.student.getStudentID() + "] has already enrolled course [" + course.getCourseID() + "] in semester [" + this.semester + "].");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        else {
-            coursesList.add(course);
-            //System.out.println("Successfully enroll into [" + course.getCourseID() + "] for semester [" + semester + "].");
-            return true;
-        }
-    }
-    public boolean dropCourse(Course course) {
-        if (coursesList.contains(course)) {
-            coursesList.remove(course);
-            System.out.println("Course [" + course.getCourseID() + "] has been dropped.");
-            return true;
-        }
-        return false;
-    }
-    public void dropAllCourse() {
-        if (coursesList.isEmpty()) {
-            System.out.println("No course left to drop in semester [" + semester + "].");
-        }
-        else {
-            coursesList.clear();
-            System.out.println("All course has been drop for semester [" + semester + "].");
-        }
+        StudentEnrolment o1 = (StudentEnrolment) o;
+        return student.equals(o1.getStudent()) && semester.equals(o1.getSemester()) && courses.equals(o1.courses);
     }
 
+    @Override
+    public String toString() {
+        return "[" + student.getStudentID() + " | " + courses.getCourseID() + " | " + semester + "]";
+    }
 }

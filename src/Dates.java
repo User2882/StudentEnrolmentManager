@@ -7,6 +7,7 @@ public class Dates {
     static int MAX_YEAR = 9999;
     static int MIN_YEAR = 1800;
 
+    //check for leap year
     static boolean isLeapYear(int year) {
         //the year is leap (366 days instead of 365)
         //is when it is divisible to 4 AND NOT to 100
@@ -14,10 +15,7 @@ public class Dates {
         return (((year % 4 == 0) && year % 100 != 0)
                 || year % 400 == 0);
     }
-    //return true if month contain 31 days else false
-    static boolean is31Days(int month) {
-        return (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12);
-    }
+    //return true for valid date
     static boolean isValidDate(int day, int month, int year) {
         if (year < MIN_YEAR || year > MAX_YEAR) {
             System.out.println("A year must be in range of 1800 to 9999!");
@@ -69,12 +67,22 @@ public class Dates {
         month = 01;
         year = MIN_YEAR;
     }
-    public Dates(int month, int day, int year) {
+    /*public Dates(int month, int day, int year) {
         if (isValidDate(day, month, year)) {
             this.day = day;
             this.month = month;
             this.year = year;
         }
+    }*/
+
+    public int getDay() {
+        return day;
+    }
+    public int getMonth() {
+        return month;
+    }
+    public int getYear() {
+        return year;
     }
 
     public  boolean setDate(int month, int day, int year){

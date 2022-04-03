@@ -1,142 +1,100 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class StudentEnrolmentManager {
+    //default pathing (can be edited) Ex: "C:\\Users\\Admin\\Desktop\\default.csv"
+    private static String default_path = "default.csv";
+    private ArrayList<StudentEnrolment> student_enrolments_list;
 
+    //constructor
+    public StudentEnrolmentManager() {
+        student_enrolments_list = new ArrayList<StudentEnrolment>();
+    }
+    //get list method
+    public ArrayList<StudentEnrolment> getStudent_enrolments_list() {
+        return student_enrolments_list;
+    }
+    //utility functions
+    static String readUserInput() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+    static String askFilePath() {
+        System.out.print("Welcome to the Student Enrolment Manager software (S.E.M)\nNavigate by enter the [number] correspond to the option:\n");
+        System.out.print("[1]: Initialize using the default path.\n[2]: Initialize using user-inputted path.\nInput path: ");
+        String path = readUserInput();
+        if (path.equals("2")) {
+            System.out.print("Enter file path: ");
+            path = readUserInput();
+            return path;
+        }
+        if (path.equals("1")) {
+            return default_path;
+        }
+        System.out.println("Input error\nInitializing using default path...");
+        return default_path;
+    }
 
+    static Dates readDate(String dob) {
+        String[] month_day_year = dob.split("/");
+        Dates day_of_birth_temp = new Dates();
+        day_of_birth_temp.setDate(Integer.parseInt(month_day_year[0]), Integer.parseInt(month_day_year[1]), Integer.parseInt(month_day_year[2]));
+        return day_of_birth_temp;
+    }
+    static Student readStudent(String[] input_string) {
+        Student student_temp = new Student();
+        student_temp.setStudentID(input_string[0]);
+        student_temp.setStudentName(input_string[1]);
+        student_temp.setDate(readDate(input_string[2]));
+        return student_temp;
+    }
+    static Course readCourse(String[] input_string) {
+        Course course_temp = new Course();
+        course_temp.setCourseID(input_string[3]);
+        course_temp.setCourseName(input_string[4]);
+        course_temp.setCredit(Integer.parseInt(input_string[5]));
+        return course_temp;
+    }
+    static StudentEnrolment createProfile(String[] input_string) {
+        StudentEnrolment student_enrolment_info_temp = new StudentEnrolment();
+        student_enrolment_info_temp.setStudent(readStudent(input_string));
+        student_enrolment_info_temp.setCourses(readCourse(input_string));
+        student_enrolment_info_temp.setSemester(input_string[6]);
+        return student_enrolment_info_temp;
+    }
 
-    public static void main(String[] args) throws IOException {
+    public boolean init() {
         String read_line = "";
-        String separator = ",";
-        ArrayList<StudentEnrolment> studentProfileList = new ArrayList<StudentEnrolment>();
-
-        //block main function: read from CSV and store data to ArrayList
         try {
-            //find and read the CSV file
-            BufferedReader buffered_reader = new BufferedReader(new FileReader("C:\\Users\\loilo\\Desktop\\default.csv"));
-            //while reading the file line per line
-            while ((read_line = buffered_reader.readLine()) != null) {
-                //parse the line read into section separated by ','
-                String[] input_profile = read_line.split(separator);
-
-                String[] dob = input_profile[2].split("/");
-                Dates day_of_birth = new Dates(Integer.parseInt(dob[0]), Integer.parseInt(dob[1]), Integer.parseInt(dob[2]));
-                Student student = new Student(input_profile[0], input_profile[1], day_of_birth);
-                Course course = new Course(input_profile[3], input_profile[4], Integer.parseInt(input_profile[5]));
-
-                if (studentProfileList.isEmpty()) {
-                    //create first/new profile
-                    StudentEnrolment student_enrolment_info = new StudentEnrolment(student, input_profile[6]);
-                    student_enrolment_info.enrollCourse(course);
-                    studentProfileList.add(student_enrolment_info);
-                }
-                //after first profile was initiate
-                else {
-                    //scan for existing profile with matching student and semester to update course list
-                    for (int index = 0; index < studentProfileList.size(); index++) {
-                        if (Objects.equals(studentProfileList.get(index).getStudent(), student) && Objects.equals(studentProfileList.get(index).getSemester(), input_profile[6])) {
-                            //student info already setup and is the same semester
-                            //do update/add/drop course
-                            studentProfileList.get(index).enrollCourse(course);
-                        }
-                        else {
-                            //add new profile if same student but enroll for different semester
-                            StudentEnrolment student_enrolment_info = new StudentEnrolment(student, input_profile[6]);
-                            student_enrolment_info.enrollCourse(course);
-                            studentProfileList.add(student_enrolment_info);
-                        }
-                    }
-                }
+//            Scanner scannerObj = new Scanner(new File("C:\\Users\\loilo\\Desktop\\default.csv"));   //find and read the CSV file
+            Scanner scannerObj = new Scanner(new File(askFilePath()));
+            while (scannerObj.hasNextLine()) {  //while reading the file line per line
+                read_line = scannerObj.nextLine();
+                //parse into substrings containing std_id, std_name, std_dob, crs_id, crs_name, crs_cred, semester
+                String[] input_profile = read_line.split(",");
+                //assembling the profile
+                StudentEnrolment student_enrolment_info = createProfile(input_profile);
+                //add profile to list
+                student_enrolments_list.add(student_enrolment_info);
             }
-            buffered_reader.close();
+            scannerObj.close();
+            System.out.println("Student enrolment list has been initialize.");
+            return true;
+        } catch (FileNotFoundException e) { //error handling
+//            e.printStackTrace();
+            System.out.println("Error! File path invalid.");
+            return false;
         }
-        catch (IOException errorIO) {
-            errorIO.printStackTrace();
-        }
+    }
 
-        System.out.println("File read and info stored!");
-        //user interface start here
-        String string_input = "";
+    public static void main(String[] args) {
+        StudentEnrolmentManager system = new StudentEnrolmentManager();
 
-        System.out.println("Welcome to the Student Enrolment Manager software (S.E.M)");
-        System.out.println("Navigate by enter the [number] correspond to the option:");
-
-        while (!Objects.equals(string_input, "0")) {
-            System.out.print("[1]: Add a new enrolment profile.\n[2]: Update existing enrolment profile.\n[3]: Delete an existing enrolment profile.\n[0]: Exit.\nInput: ");
-            BufferedReader read_from_console = new BufferedReader(new InputStreamReader(System.in));
-            string_input = read_from_console.readLine();
-
-            switch (string_input) {
-                case "0":   //exit block
-                    //need to save file
-                    System.out.println("File saved!");
-                    break;
-                case "1":   //add new profile block
-                    Student student = new Student();
-
-                    System.out.print("Student information:\n -Student ID: ");
-                    String studentID = read_from_console.readLine();
-                    if (!student.setStudentID(studentID)) {
-                        System.out.println("[" + studentID + "] is not a valid ID!");
-                        student = null;
-                        break;
-                    }
-
-                    System.out.print(" -Student Name: ");
-                    String studentName = read_from_console.readLine();
-                    student.setStudentName(studentName);
-
-                    System.out.print(" -Student DOB (mm/dd/yy): ");
-                    String studentDOB[] = read_from_console.readLine().split("/");
-                    int month = 0, day = 0, year = 0;
-                    //check for error when Integer.parseInt(String input) input contain char
-                    try {
-                        month = Integer.parseInt(studentDOB[0]);
-                        day = Integer.parseInt(studentDOB[1]);
-                        year = Integer.parseInt(studentDOB[2]);
-                    } catch (NumberFormatException e) {
-                        //uncomment to print out error message
-                        //e.printStackTrace();
-                        System.out.println("Character(s) input detected!");
-                        //clear the invalid obj
-                        student = null;
-                        break;
-                    }
-                    Dates day_of_birth = new Dates();
-                    if (!day_of_birth.setDate(month, day, year)) {
-                        System.out.println("New student info invalid!");
-                        student = null;
-                        break;
-                    }
-                    student.setDate(day_of_birth);
-
-                    System.out.println(" -Semester of enrolment: ");
-                    String semester = read_from_console.readLine();
-                    if (Integer.parseInt(semester.substring(0,3)) >= 1800 && Integer.parseInt(semester.substring(0,3)) <= 9999 &&
-                            (semester.toUpperCase().endsWith("A") || semester.toUpperCase().endsWith("B") || semester.toUpperCase().endsWith("C"))) {
-                        studentProfileList.add(new StudentEnrolment(student, semester));
-                        System.out.println("Successfully enroll [" + studentID + "] into semester [" + semester + "]");
-                        break;
-                    }
-                    else {
-                        //clear obj
-                        student = null;
-                    }
-                    break;
-                case "2":
-                    System.out.println("2");
-                    break;
-                case "3":
-                    System.out.println("3");
-                    break;
-                default:
-                    System.out.println("Invalid input: [" + string_input + "] is not a valid listed input option.");
-                    break;
-            }
+        if (system.init()) {
+            System.out.println(system.getStudent_enrolments_list().toString());
         }
 
     }

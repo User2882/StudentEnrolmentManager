@@ -8,11 +8,11 @@ public class Course {
         courseName = "Default";
         credit = 0;
     }
-    public Course(String courseID, String courseName, int credit) {
+    /*public Course(String courseID, String courseName, int credit) {
         this.courseID = courseID.toUpperCase();
         this.courseName = courseName;
         this.credit = credit;
-    }
+    }*/
 
     public void setCourseID(String courseID) {
         this.courseID = courseID.toUpperCase();
@@ -41,6 +41,6 @@ public class Course {
 
     @Override
     public String toString() {
-        return "[" + courseID + "]|[" + courseName + "]|[" + credit + "]";
+        return "[" + courseID + " | " + courseName + " | " + credit + "]";
     }
 }
