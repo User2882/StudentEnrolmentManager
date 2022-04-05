@@ -99,7 +99,7 @@ public class Dates {
     //to print out the date in mm/dd/yy format
     @Override
     public String toString() {
-        return (Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year));
+        return Integer.toString(month) + '/' + Integer.toString(day) + '/' + Integer.toString(year);
     }
     /*
     //to print out the date in dd/mm/yy format

@@ -6,16 +6,18 @@ public class StudentEnrolment {
     private Course courses;
     private String semester;
 
+    //normal constructor
     public StudentEnrolment() {
         student = new Student();
         courses = new Course();
         semester = "Default";
     }
-    /*public StudentEnrolment(Student student, String semester) {
-        this.student = student;
-        this.courses = new ArrayList<Course>();
-        this.semester = semester.toUpperCase();
-    }*/
+    //copy constructor
+    public StudentEnrolment(StudentEnrolment enrolment) {
+        this.student = enrolment.getStudent();
+        this.courses = enrolment.getCourses();
+        this.semester = enrolment.getSemester();
+    }
 
     public void setStudent(Student student) {
         this.student = student;
@@ -51,6 +53,6 @@ public class StudentEnrolment {
 
     @Override
     public String toString() {
-        return "[" + student.getStudentID() + " | " + courses.getCourseID() + " | " + semester + "]";
+        return student + " | " + courses + " | " + semester + "\n";
     }
 }

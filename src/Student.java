@@ -67,7 +67,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "[" + studentID + " | " + studentName + " | " + dayOfBirth.toString() + "]";
+        return studentID + " | " + studentName + " | " + dayOfBirth.toString();
     }
 
 }
