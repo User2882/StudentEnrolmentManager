@@ -8,11 +8,11 @@ public class StudentEnrolmentManager {
     /**
     * Default pathing (can be edited) Ex: "C:\Users\Admin\Desktop\default.csv"
     */
-    private static final String default_path = "default.csv";
+    private static final String default_file_name = "default";
     private static final String default_desktop_path = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
 
-    private static final String save_file_name = "Report file";
-    private static final String save_file_type_csv = ".csv";
+    private static final String default_save_file_name = "Report file";
+    private static final String default_save_file_type_csv = ".csv";
 
     /**
      * A list for keeping enrolment profile
@@ -66,9 +66,13 @@ public class StudentEnrolmentManager {
             return path;
         }
         if (path.equals("1")) {
-            return default_path;
+            return default_file_name + default_save_file_type_csv;
         }
         return "";
+    }
+    static String askSaveFilePath() {
+        System.out.print("Enter file path: ");
+        return readUserInput();
     }
     static String[] askSTDIDandSemester() {
         String[] return_string = new String[2];
@@ -79,11 +83,11 @@ public class StudentEnrolmentManager {
         return return_string;
     }
     static String askSearchMethod() {
-        System.out.print("[1]: Search via student ID.\n[2]: Search via course ID.\n[3]: Search via semester of enrolment.\nInput: ");
+        System.out.print("[1]: Search via student ID.\n[2]: Search via course ID.\n[3]: Search via semester of enrolment.\n[4]: Get all enrolment profile.\nInput: ");
         return readUserInput();
     }
     static boolean askToSaveFile() {
-        System.out.println("Would you like to save the result toa  file?");
+        System.out.println("Would you like to save the result to a file?");
         System.out.print("[Y]: Save.\n[N]: Do not save.\nInput: ");
         while (true) {
             String user_input = readUserInput().toUpperCase();
@@ -94,6 +98,19 @@ public class StudentEnrolmentManager {
                 return false;
             }
             System.out.print("Incorrect input!\nInput: ");
+        }
+    }
+    static boolean isSaveDefault() {
+        System.out.println("[1]: Save using default path.\n[2]: Save using user-inputted path.\nInput: ");
+        while (true){
+            String user_input = readUserInput();
+            if (user_input.equals("1")) {
+                return true;
+            }
+            if (user_input.equals("2")) {
+                return false;
+            }
+            System.out.println("Incorrect input!");
         }
     }
 
@@ -262,6 +279,12 @@ public class StudentEnrolmentManager {
                 }
                 return return_list;
             }
+            case "4" -> {
+                for (StudentEnrolment enrolment : getStudent_enrolments_list()) {
+                    return_list.add(new StudentEnrolment(enrolment));
+                }
+                return return_list;
+            }
             default -> {
                 System.out.println("Invalid input");
                 return return_list;
@@ -295,22 +318,20 @@ public class StudentEnrolmentManager {
         return true;
     }
     static boolean saveFileToDesktop(ArrayList<StudentEnrolment> enrolments) {
-        String file_to_create = default_desktop_path + "\\" + save_file_name;
+        String file_to_create = default_desktop_path + "\\" + default_save_file_name;
         try {
             int i = 1;
             while (true) {
-                File file = new File(file_to_create + save_file_type_csv);
+                File file = new File(file_to_create + default_save_file_type_csv);
                 if (file.createNewFile()) {
                     //write to file
-                    Writer writer = new FileWriter(file_to_create + save_file_type_csv);
-//                    String write_line;
+                    Writer writer = new FileWriter(file_to_create + default_save_file_type_csv);
                     for (StudentEnrolment enrolment : enrolments) {
-//                        write_line = enrolment.toCSV();
                         writer.write(enrolment.toCSV() + "\n");
                     }
                     writer.flush();
                     writer.close();
-                    System.out.println("File saved at: " + file_to_create + save_file_type_csv);
+                    System.out.println("File saved at: " + file_to_create + default_save_file_type_csv);
                     return true;
                 }
                 else {
@@ -319,7 +340,46 @@ public class StudentEnrolmentManager {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error while trying to create [" + save_file_name + "] at Path: " + default_desktop_path);
+            System.out.println("Error while trying to create [" + default_save_file_name + "] at Path: " + default_desktop_path);
+            return false;
+        }
+    }
+    static boolean saveFileDefault(ArrayList<StudentEnrolment> enrolments) {
+        String file_to_create = default_file_name;
+        try {
+            int i = 1;
+            File file = new File(file_to_create + default_save_file_type_csv);
+            //write to file
+            Writer writer = new FileWriter(file_to_create + default_save_file_type_csv);
+            for (StudentEnrolment enrolment : enrolments) {
+                writer.write(enrolment.toCSV() + "\n");
+            }
+            writer.flush();
+            writer.close();
+            System.out.println("File saved at: " + file_to_create + default_save_file_type_csv);
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error while trying to create [" + default_save_file_name + "] at Path: " + default_desktop_path);
+            return false;
+        }
+    }
+    static boolean saveFileToLocation(ArrayList<StudentEnrolment> enrolments, String file_path) {
+        try {
+            int i = 1;
+            File file = new File(file_path);
+            //write to file
+            Writer writer = new FileWriter(file_path);
+//                    String write_line;
+            for (StudentEnrolment enrolment : enrolments) {
+//                        write_line = enrolment.toCSV();
+                writer.write(enrolment.toCSV() + "\n");
+            }
+            writer.flush();
+            writer.close();
+            System.out.println("File saved at: " + file_path);
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error while trying to create [" + default_save_file_name + "] at Path: " + default_desktop_path);
             return false;
         }
     }
@@ -360,7 +420,7 @@ public class StudentEnrolmentManager {
         System.out.print("Note: Do not use space after or before comma (',')!\nInput: ");
         String user_input = readUserInput();
         if (checkStringComponent(user_input) && checkProfile(user_input)) {
-            getStudent_enrolments_list().add(createProfile(readUserInput()));
+            getStudent_enrolments_list().add(createProfile(user_input));
             return true;
         }
         System.out.println("Incorrect input format.");
@@ -414,6 +474,14 @@ public class StudentEnrolmentManager {
             user_input = readUserInput();
             switch (user_input) {
                 case "0":   //exit
+                    if (askToSaveFile()) {
+                        if (isSaveDefault()) {
+                            saveFileDefault(system.getStudent_enrolments_list());
+                        }
+                        else {
+                            saveFileToLocation(system.getStudent_enrolments_list(), askFilePath());
+                        }
+                    }
                     System.out.println("Closing application.....\nDone!");
                     break;
 

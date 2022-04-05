@@ -20,7 +20,6 @@ public class Student {
         int number;
         boolean valid = true;
         String temp = studentID.substring(1);
-
         try {
             number = Integer.parseInt(temp);
         } catch (NumberFormatException e) {
