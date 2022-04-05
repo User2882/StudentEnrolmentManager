@@ -65,6 +65,9 @@ public class Student {
         return studentID.equals(o1.studentID) && studentName.equals(o1.studentName) && dayOfBirth.equals(o1.dayOfBirth);
     }
 
+    public String toCSV() {
+        return studentID + "," + studentName+ "," + dayOfBirth.toString();
+    }
     @Override
     public String toString() {
         return studentID + " | " + studentName + " | " + dayOfBirth.toString();

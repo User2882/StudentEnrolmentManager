@@ -39,6 +39,9 @@ public class Course {
         return credit;
     }
 
+    public String toCSV() {
+        return courseID + "," + courseName + "," + credit;
+    }
     @Override
     public String toString() {
         return courseID + " | " + courseName + " | " + credit;

@@ -1,15 +1,18 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import javax.swing.filechooser.FileSystemView;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class StudentEnrolmentManager {
     /**
-    * Default pathing (can be edited) Ex: "C:\\Users\\Admin\\Desktop\\default.csv"
+    * Default pathing (can be edited) Ex: "C:\Users\Admin\Desktop\default.csv"
     */
     private static final String default_path = "default.csv";
+    private static final String default_desktop_path = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
+
+    private static final String save_file_name = "Report file";
+    private static final String save_file_type_csv = ".csv";
 
     /**
      * A list for keeping enrolment profile
@@ -78,6 +81,20 @@ public class StudentEnrolmentManager {
     static String askSearchMethod() {
         System.out.print("[1]: Search via student ID.\n[2]: Search via course ID.\n[3]: Search via semester of enrolment.\nInput: ");
         return readUserInput();
+    }
+    static boolean askToSaveFile() {
+        System.out.println("Would you like to save the result toa  file?");
+        System.out.print("[Y]: Save.\n[N]: Do not save.\nInput: ");
+        while (true) {
+            String user_input = readUserInput().toUpperCase();
+            if (user_input.equals("Y")) {
+                return true;
+            }
+            if (user_input.equals("N")) {
+                return false;
+            }
+            System.out.print("Incorrect input!\nInput: ");
+        }
     }
 
 
@@ -277,6 +294,35 @@ public class StudentEnrolmentManager {
         enrolment_list.remove(enrolment_temp);
         return true;
     }
+    static boolean saveFileToDesktop(ArrayList<StudentEnrolment> enrolments) {
+        String file_to_create = default_desktop_path + "\\" + save_file_name;
+        try {
+            int i = 1;
+            while (true) {
+                File file = new File(file_to_create + save_file_type_csv);
+                if (file.createNewFile()) {
+                    //write to file
+                    Writer writer = new FileWriter(file_to_create + save_file_type_csv);
+//                    String write_line;
+                    for (StudentEnrolment enrolment : enrolments) {
+//                        write_line = enrolment.toCSV();
+                        writer.write(enrolment.toCSV() + "\n");
+                    }
+                    writer.flush();
+                    writer.close();
+                    System.out.println("File saved at: " + file_to_create + save_file_type_csv);
+                    return true;
+                }
+                else {
+                    file_to_create = file_to_create + "_" + String.valueOf(i);
+                    i++;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error while trying to create [" + save_file_name + "] at Path: " + default_desktop_path);
+            return false;
+        }
+    }
 
     /**
      * Start to find and read file to populate the enrolment array list
@@ -342,8 +388,21 @@ public class StudentEnrolmentManager {
         System.out.println("Invalid input!");
         return false;
     }
-    public boolean search() {
+    public boolean searchEnrolment() {
         //search and save file
+        ArrayList<StudentEnrolment> searched_answer_lists = searchProfile();
+        if (searched_answer_lists.isEmpty()) {
+            //no match
+            return false;
+        }
+        for (StudentEnrolment enrolment : searched_answer_lists) {
+            System.out.println(enrolment.toCSV());
+        }
+        //ask to save file
+        if (askToSaveFile()) {
+            saveFileToDesktop(searched_answer_lists);
+        }
+        return true;
     }
 
     public static void main(String[] args) {
@@ -355,6 +414,7 @@ public class StudentEnrolmentManager {
             user_input = readUserInput();
             switch (user_input) {
                 case "0":   //exit
+                    System.out.println("Closing application.....\nDone!");
                     break;
 
                 case "1":   //add a new profile from user input
@@ -374,7 +434,11 @@ public class StudentEnrolmentManager {
                     break;
 
                 case "3":
-
+                    if (system.searchEnrolment()) {
+                        System.out.println("Ending search procedure...");
+                        break;
+                    }
+                    System.out.println("No match found in search!");
                     break;
 
                 default:    //invalid user input catch

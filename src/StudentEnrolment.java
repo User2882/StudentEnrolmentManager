@@ -51,8 +51,11 @@ public class StudentEnrolment {
         return student.equals(o1.getStudent()) && semester.equals(o1.getSemester()) && courses.equals(o1.courses);
     }
 
+    public String toCSV() {
+        return student.toCSV() + "," + courses.toCSV() + "," + semester;
+    }
     @Override
     public String toString() {
-        return student + " | " + courses + " | " + semester + "\n";
+        return student + " | " + courses + " | " + semester;
     }
 }
