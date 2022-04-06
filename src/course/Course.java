@@ -1,18 +1,16 @@
+package course;
+
 public class Course {
     private String courseID;
     private String courseName;
     private int credit;
 
     public Course() {
-        courseID = "C000";
-        courseName = "Default";
-        credit = 0;
+        this.courseID = "C000";
+        this.courseName = "Default";
+        this.credit = 0;
     }
-    /*public Course(String courseID, String courseName, int credit) {
-        this.courseID = courseID.toUpperCase();
-        this.courseName = courseName;
-        this.credit = credit;
-    }*/
+
 
     public void setCourseID(String courseID) {
         this.courseID = courseID.toUpperCase();

@@ -1,4 +1,6 @@
-import java.nio.file.FileAlreadyExistsException;
+package student;
+
+import utilities.Dates;
 
 public class Student {
     private String studentID;
@@ -6,15 +8,10 @@ public class Student {
     private Dates dayOfBirth;
 
     public Student() {
-        studentID = "S000";
-        studentName = "Default";
-        dayOfBirth = new Dates();
+        this.studentID = "S000";
+        this.studentName = "Default";
+        this.dayOfBirth = new Dates();
     }
-    /*public Student(String studentID, String studentName, Dates dayOfBirth) {
-        this.studentID = studentID.toUpperCase();
-        this.studentName = studentName;
-        this.dayOfBirth = dayOfBirth;
-    }*/
 
     public boolean setStudentID(String studentID) {
         int number;
@@ -33,10 +30,12 @@ public class Student {
         }
         return false;
     }
+
     public boolean setStudentName(String studentName) {
         this.studentName = studentName;
         return true;
     }
+
     public boolean setDate(Dates dayOfBirth) {
 //        this.dayOfBirth = dayOfBirth;
         return this.dayOfBirth.setDate(dayOfBirth.getMonth(), dayOfBirth.getDay(), dayOfBirth.getYear());
@@ -45,9 +44,11 @@ public class Student {
     public String getStudentID() {
         return studentID;
     }
+
     public String getStudentName() {
         return studentName;
     }
+
     public Dates getDayOfBirth() {
         return dayOfBirth;
     }
@@ -67,9 +68,9 @@ public class Student {
     public String toCSV() {
         return studentID + "," + studentName+ "," + dayOfBirth.toString();
     }
+
     @Override
     public String toString() {
         return studentID + " | " + studentName + " | " + dayOfBirth.toString();
     }
-
 }

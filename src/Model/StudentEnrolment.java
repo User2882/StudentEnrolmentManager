@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Objects;
+package Model;
 
 public class StudentEnrolment {
     private Student student;

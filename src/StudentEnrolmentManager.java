@@ -1,19 +1,15 @@
-import javax.swing.filechooser.FileSystemView;
+import Model.Course;
+import Model.Dates;
+import Model.Student;
+import Model.StudentEnrolment;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
 public class StudentEnrolmentManager {
-    /**
-    * Default pathing (can be edited) Ex: "C:\Users\Admin\Desktop\default.csv"
-    */
-    private static final String default_file_name = "default";
-    private static final String default_desktop_path = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
-
-    private static final String default_save_file_name = "Report file";
-    private static final String default_save_file_type_csv = ".csv";
-
     /**
      * A list for keeping enrolment profile
      */
@@ -35,90 +31,10 @@ public class StudentEnrolmentManager {
     }
 
 
-    //utility functions
-    static String readUserInput() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
-    static Course readCourseFromUser(String[] input_string) {
-        Course course_temp = new Course();
-        course_temp.setCourseID(input_string[0]);
-        course_temp.setCourseName(input_string[1]);
-        try {
-            course_temp.setCredit(Integer.parseInt(input_string[2]));
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Incorrect format!");
-            return null;
-        }
-        return course_temp;
-    }
     /**
-     * Prompt user with opiton of using the default file path or choose a different one
-     * @return String object
-     */
-    static String askFilePath() {
-        System.out.print("Welcome to the Student Enrolment Manager software (S.E.M)\nNavigate by enter the [number] correspond to the option:\n");
-        System.out.print("[1]: Initialize using the default path.\n[2]: Initialize using user-inputted path.\n[0]: Exit.\nInput path: ");
-        String path = readUserInput();
-        if (path.equals("2")) {
-            System.out.print("Enter file path: ");
-            path = readUserInput();
-            return path;
-        }
-        if (path.equals("1")) {
-            return default_file_name + default_save_file_type_csv;
-        }
-        return "";
-    }
-    static String askSaveFilePath() {
-        System.out.print("Enter file path: ");
-        return readUserInput();
-    }
-    static String[] askSTDIDandSemester() {
-        String[] return_string = new String[2];
-        System.out.print("Enter student ID: ");
-        return_string[0] = readUserInput().toUpperCase();
-        System.out.print("Enter enrolment semester: ");
-        return_string[1] = readUserInput().toUpperCase();
-        return return_string;
-    }
-    static String askSearchMethod() {
-        System.out.print("[1]: Search via student ID.\n[2]: Search via course ID.\n[3]: Search via semester of enrolment.\n[4]: Get all enrolment profile.\nInput: ");
-        return readUserInput();
-    }
-    static boolean askToSaveFile() {
-        System.out.println("Would you like to save the result to a file?");
-        System.out.print("[Y]: Save.\n[N]: Do not save.\nInput: ");
-        while (true) {
-            String user_input = readUserInput().toUpperCase();
-            if (user_input.equals("Y")) {
-                return true;
-            }
-            if (user_input.equals("N")) {
-                return false;
-            }
-            System.out.print("Incorrect input!\nInput: ");
-        }
-    }
-    static boolean isSaveDefault() {
-        System.out.println("[1]: Save using default path.\n[2]: Save using user-inputted path.\nInput: ");
-        while (true){
-            String user_input = readUserInput();
-            if (user_input.equals("1")) {
-                return true;
-            }
-            if (user_input.equals("2")) {
-                return false;
-            }
-            System.out.println("Incorrect input!");
-        }
-    }
-
-
-    /**
-     * Parse a string with format "mm/dd/yy" and return a Dates object
+     * Parse a string with format "mm/dd/yy" and return a Model.Dates object
      * @param day_of_birth A string with format "mm/dd/yy"
-     * @return Dates object
+     * @return Model.Dates object
      */
     static Dates readDate(String day_of_birth) {
         String[] month_day_year = day_of_birth.split("/");
@@ -127,9 +43,9 @@ public class StudentEnrolmentManager {
         return day_of_birth_temp;
     }
     /**
-     * Read from a String[] and sort out the variable needed for the Student obj
+     * Read from a String[] and sort out the variable needed for the Model.Student obj
      * @param input_string A string array of 7 component
-     * @return Student object
+     * @return Model.Student object
      */
     static Student readStudent(String[] input_string) {
         Student student_temp = new Student();
@@ -139,9 +55,9 @@ public class StudentEnrolmentManager {
         return student_temp;
     }
     /**
-     * Read from a String[] and sort out the variable needed for the Course obj
+     * Read from a String[] and sort out the variable needed for the Model.Course obj
      * @param input_string A string array of 7 component
-     * @return Course object
+     * @return Model.Course object
      */
     static Course readCourse(String[] input_string) {
         Course course_temp = new Course();
@@ -151,9 +67,9 @@ public class StudentEnrolmentManager {
         return course_temp;
     }
     /**
-     * Create a StudentEnrolment object from a String
+     * Create a Model.StudentEnrolment object from a String
      * @param input_string A string that can be parsed into 7 components
-     * @return StudentEnrolment object
+     * @return Model.StudentEnrolment object
      */
     static StudentEnrolment createProfile(String input_string) {
         String[] parsed_string = input_string.split(",");   //parse into substrings containing std_id, std_name, std_dob, crs_id, crs_name, crs_cred, semester
@@ -247,11 +163,11 @@ public class StudentEnrolmentManager {
     }
     public ArrayList<StudentEnrolment> searchProfile() {
         ArrayList<StudentEnrolment> return_list = new ArrayList<StudentEnrolment>();
-        String option = askSearchMethod();
+        String option = Utilities.askSearchMethod();
         switch (option) {
             case "1" -> {
                 System.out.print("Enter student ID: ");
-                String std_id = readUserInput().toUpperCase();
+                String std_id = Utilities.readUserInput().toUpperCase();
                 for (StudentEnrolment enrolment : getStudent_enrolments_list()) {
                     if (std_id.equals(enrolment.getStudent().getStudentID())) {
                         return_list.add(new StudentEnrolment(enrolment));
@@ -261,7 +177,7 @@ public class StudentEnrolmentManager {
             }
             case "2" -> {
                 System.out.print("Enter course ID: ");
-                String crs_id = readUserInput().toUpperCase();
+                String crs_id = Utilities.readUserInput().toUpperCase();
                 for (StudentEnrolment enrolment : getStudent_enrolments_list()) {
                     if (crs_id.equals(enrolment.getCourses().getCourseID())) {
                         return_list.add(new StudentEnrolment(enrolment));
@@ -271,7 +187,7 @@ public class StudentEnrolmentManager {
             }
             case "3" -> {
                 System.out.print("Enter semester: ");
-                String sem = readUserInput().toUpperCase();
+                String sem = Utilities.readUserInput().toUpperCase();
                 for (StudentEnrolment enrolment : getStudent_enrolments_list()) {
                     if (sem.equals(enrolment.getSemester())) {
                         return_list.add(new StudentEnrolment(enrolment));
@@ -292,78 +208,7 @@ public class StudentEnrolmentManager {
         }
     }
 
-    static boolean addCourse(String[] studentID_and_semester, ArrayList<StudentEnrolment> enrolment_list) {
-        System.out.print("Enter the course information as follow:\nCourse_ID,Course_name,Course_credit\nNote: Do not use space after or before comma (',')!\nInput: ");
-        String user_input = readUserInput();
-        String[] course_info = user_input.split(",");
-        Course course_temp = readCourseFromUser(course_info);
-        if (course_temp == null) {
-            return false;
-        }
-        StudentEnrolment enrolment_temp = copyStudentProfileForAdding(studentID_and_semester[0], studentID_and_semester[1], enrolment_list);
-        enrolment_temp.setCourses(course_temp);
-        enrolment_list.add(enrolment_temp);
-        return true;
-    }
-    static boolean delCourse(String[] studentID_and_semester, ArrayList<StudentEnrolment> enrolment_list) {
-        System.out.print("Enter the course information as follow:\nCourse_ID,Course_name,Course_credit\nNote: Do not use space after or before comma (',')!\nInput: ");
-        String user_input = readUserInput();
-        String[] course_info = user_input.split(",");
-        Course course_temp = readCourseFromUser(course_info);
-        if (course_temp == null) {
-            return false;
-        }
-        StudentEnrolment enrolment_temp = copyStudentProfileForDropping(studentID_and_semester[0], course_temp.getCourseID(), studentID_and_semester[1], enrolment_list);
-        enrolment_list.remove(enrolment_temp);
-        return true;
-    }
-    static boolean saveFileToDesktop(ArrayList<StudentEnrolment> enrolments) {
-        String file_to_create = default_desktop_path + "\\" + default_save_file_name;
-        try {
-            int i = 1;
-            while (true) {
-                File file = new File(file_to_create + default_save_file_type_csv);
-                if (file.createNewFile()) {
-                    //write to file
-                    Writer writer = new FileWriter(file_to_create + default_save_file_type_csv);
-                    for (StudentEnrolment enrolment : enrolments) {
-                        writer.write(enrolment.toCSV() + "\n");
-                    }
-                    writer.flush();
-                    writer.close();
-                    System.out.println("File saved at: " + file_to_create + default_save_file_type_csv);
-                    return true;
-                }
-                else {
-                    file_to_create = file_to_create + "_" + String.valueOf(i);
-                    i++;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error while trying to create [" + default_save_file_name + "] at Path: " + default_desktop_path);
-            return false;
-        }
-    }
-    static boolean saveFileDefault(ArrayList<StudentEnrolment> enrolments) {
-        String file_to_create = default_file_name;
-        try {
-            int i = 1;
-            File file = new File(file_to_create + default_save_file_type_csv);
-            //write to file
-            Writer writer = new FileWriter(file_to_create + default_save_file_type_csv);
-            for (StudentEnrolment enrolment : enrolments) {
-                writer.write(enrolment.toCSV() + "\n");
-            }
-            writer.flush();
-            writer.close();
-            System.out.println("File saved at: " + file_to_create + default_save_file_type_csv);
-            return true;
-        } catch (IOException e) {
-            System.out.println("Error while trying to create [" + default_save_file_name + "] at Path: " + default_desktop_path);
-            return false;
-        }
-    }
-    static boolean saveFileToLocation(ArrayList<StudentEnrolment> enrolments, String file_path) {
+
         try {
             int i = 1;
             File file = new File(file_path);
@@ -392,7 +237,7 @@ public class StudentEnrolmentManager {
         while (true) {
             try {
 //            Scanner reader_object = new Scanner(new File("C:\\Users\\loilo\\Desktop\\default.csv"));   //find and read the CSV file
-                Scanner reader_object = new Scanner(new File(askFilePath()));
+                Scanner reader_object = new Scanner(new File(Utilities.askFilePath()));
                 while (reader_object.hasNextLine()) {  //while reading the file line per line
                     read_line = reader_object.nextLine();
                     if (checkStringComponent(read_line)) {
@@ -403,7 +248,7 @@ public class StudentEnrolmentManager {
                     }
                 }
                 reader_object.close();
-                System.out.println("Student enrolment list has been initialize.");
+                System.out.println("Model.Student enrolment list has been initialize.");
                 break;
             } catch (FileNotFoundException e) { //error handling
 //            e.printStackTrace();
@@ -418,7 +263,7 @@ public class StudentEnrolmentManager {
                             "Course_ID,Course_name,Course_credit," +
                             "Semester_of_enrolment");
         System.out.print("Note: Do not use space after or before comma (',')!\nInput: ");
-        String user_input = readUserInput();
+        String user_input = Utilities.readUserInput();
         if (checkStringComponent(user_input) && checkProfile(user_input)) {
             getStudent_enrolments_list().add(createProfile(user_input));
             return true;
@@ -427,16 +272,16 @@ public class StudentEnrolmentManager {
         return false;
     }
     public boolean updateEnrolment() {
-        String[] studentID_and_semester = askSTDIDandSemester();
+        String[] studentID_and_semester = Utilities.askSTDIDandSemester();
         ArrayList<Course> course_list = getStudentCourseList(studentID_and_semester[0], studentID_and_semester[1], getStudent_enrolments_list());
         if (course_list.isEmpty()) {
-            System.out.println("Student [" + studentID_and_semester[0] + "] does not have a profile for semester [" + studentID_and_semester[1] + "]");
+            System.out.println("Model.Student [" + studentID_and_semester[0] + "] does not have a profile for semester [" + studentID_and_semester[1] + "]");
             return false;
         }
-        System.out.println("Course for student [" + studentID_and_semester[0] + "] of semester [" + studentID_and_semester[1] + "]:");
+        System.out.println("Model.Course for student [" + studentID_and_semester[0] + "] of semester [" + studentID_and_semester[1] + "]:");
         System.out.println(course_list.toString());
         System.out.print("[1]: Add/Enroll a new course.\n[2]: Delete/Drop an existing course.\nInput: ");
-        String user_input = readUserInput();
+        String user_input = Utilities.readUserInput();
         if (user_input.equals("1")) {
             //enrol a course
             return addCourse(studentID_and_semester, getStudent_enrolments_list());
@@ -459,27 +304,27 @@ public class StudentEnrolmentManager {
             System.out.println(enrolment.toCSV());
         }
         //ask to save file
-        if (askToSaveFile()) {
+        if (Utilities.askToSaveFile()) {
             saveFileToDesktop(searched_answer_lists);
         }
         return true;
     }
 
-    public static void main(String[] args) {
+    public void run() {
         StudentEnrolmentManager system = new StudentEnrolmentManager();
         system.init();
         String user_input = "";
         while (!user_input.equals("0")) {
             System.out.print("[1]: Add new enrolment profile.\n[2]: Update existing profile.\n[3]: Search existing profile.\n[0]: Exit.\nInput: ");
-            user_input = readUserInput();
+            user_input = Utilities.readUserInput();
             switch (user_input) {
                 case "0":   //exit
-                    if (askToSaveFile()) {
-                        if (isSaveDefault()) {
+                    if (Utilities.askToSaveFile()) {
+                        if (Utilities.isSaveDefault()) {
                             saveFileDefault(system.getStudent_enrolments_list());
                         }
                         else {
-                            saveFileToLocation(system.getStudent_enrolments_list(), askFilePath());
+                            saveFileToLocation(system.getStudent_enrolments_list(), Utilities.askFilePath());
                         }
                     }
                     System.out.println("Closing application.....\nDone!");

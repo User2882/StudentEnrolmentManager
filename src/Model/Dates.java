@@ -1,3 +1,5 @@
+package Model;
+
 public class Dates {
     private int day;
     private int month;
@@ -67,7 +69,7 @@ public class Dates {
         month = 01;
         year = MIN_YEAR;
     }
-    /*public Dates(int month, int day, int year) {
+    /*public Model.Dates(int month, int day, int year) {
         if (isValidDate(day, month, year)) {
             this.day = day;
             this.month = month;
